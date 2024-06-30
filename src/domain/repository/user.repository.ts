@@ -9,4 +9,8 @@ export class UserRepository {
     async findAll(): Promise<UserDto[]> {
         return await this.prismaService.user.findMany();
     }
+
+    async findbyId(id: number): Promise<UserDto> | undefined {
+        return await this.prismaService.user.findUnique({ where: { id } });
+    }
 }
