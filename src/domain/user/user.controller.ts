@@ -9,7 +9,10 @@ export class UserController {
 
     @Get()
     async handler(@Res() response: Response) {
-        const users = await this.userService.findAll();
+        const users = (await this.userService.findAll()).map((element) => {
+            const { password: _, ...result } = element;
+            return result;
+        });
 
         return response.status(HttpStatus.OK).json(users);
     }
