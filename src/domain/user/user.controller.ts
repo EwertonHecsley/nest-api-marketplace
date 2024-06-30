@@ -1,6 +1,7 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query, Req, Res } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { UserDto } from './dto/user.dto';
 
 @Controller('user')
 export class UserController {
@@ -19,4 +20,12 @@ export class UserController {
 
         return response.status(HttpStatus.OK).json(user);
     }
+
+    @Post()
+    async store(@Body() dataUser: UserDto, @Res() response: Response) {
+        const { password: _, ...user } = await this.userService.create(dataUser);
+
+        return response.status(HttpStatus.CREATED).json(user);
+    }
+
 }

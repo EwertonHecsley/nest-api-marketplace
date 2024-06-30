@@ -13,4 +13,12 @@ export class UserRepository {
     async findbyId(id: number): Promise<UserDto> | undefined {
         return await this.prismaService.user.findUnique({ where: { id } });
     }
+
+    async findByEmail(email: string): Promise<UserDto> | undefined {
+        return await this.prismaService.user.findUnique({ where: { email } });
+    }
+
+    async create(data: UserDto): Promise<UserDto> {
+        return await this.prismaService.user.create({ data });
+    }
 }
