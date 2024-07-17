@@ -1,11 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserRepository } from '../repository/user.repository';
 import { UserDto } from './dto/user.dto';
+import { HashService } from 'src/infra/hash/hash.service';
 
 @Injectable()
 export class UserService {
     constructor(
-        private readonly userRepository: UserRepository
+        private readonly userRepository: UserRepository,
+        private readonly hashService: HashService
     ) { }
 
     async findAll(): Promise<UserDto[]> {
@@ -29,6 +31,8 @@ export class UserService {
     async create(data: UserDto): Promise<UserDto> {
         const email = await this.userRepository.findByEmail(data.email);
         if (email) throw new HttpException('Email já cadastrado.', HttpStatus.BAD_REQUEST);
+
+        data.password = await this.hashService.hashPassword(data.password);
 
         return await this.userRepository.create(data);
     }
