@@ -37,6 +37,18 @@ export class UserService {
         return await this.userRepository.create(data);
     }
 
+    async update(id: number, data: Partial<UserDto>): Promise<UserDto> {
+        const user = await this.userRepository.findbyId(id);
+        if (!user) throw new HttpException('Usuário não encontrado.', HttpStatus.NOT_FOUND);
+
+        const emailExist = await this.userRepository.findByEmail(data.email);
+        if (emailExist) throw new HttpException('Email já cadastrado.', HttpStatus.BAD_REQUEST);
+
+        data.password = await this.hashService.hashPassword(data.password);
+
+        return await this.userRepository.update(id, data);
+    }
+
     async delete(id: number) {
         const user = await this.findById(id);
         if (!user) throw new HttpException('Usuário não encontrado.', HttpStatus.NOT_FOUND);

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Response } from 'express';
 import { UserDto } from './dto/user.dto';
@@ -29,6 +29,13 @@ export class UserController {
         const { password: _, ...user } = await this.userService.create(dataUser);
 
         return response.status(HttpStatus.CREATED).json(user);
+    }
+
+    @Put(':id')
+    async update(@Param('id') id: string, @Body() dataUser: UserDto, @Res() response: Response) {
+        const { password: _, ...user } = await this.userService.update(parseInt(id), dataUser);
+
+        return response.status(HttpStatus.OK).json({ mensagem: 'Usuário atualizado com sucesso.', user });
     }
 
     @Delete(':id')

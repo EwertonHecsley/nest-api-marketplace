@@ -7,7 +7,7 @@ export class UserRepository {
     constructor(private readonly prismaService: PrismaService) { }
 
     async findAll(): Promise<UserDto[]> {
-        return await this.prismaService.user.findMany();
+        return await this.prismaService.user.findMany({ orderBy: { id: "asc" } });
     }
 
     async findbyId(id: number): Promise<UserDto> | undefined {
@@ -24,5 +24,9 @@ export class UserRepository {
 
     async delete(id: number) {
         return await this.prismaService.user.delete({ where: { id } });
+    }
+
+    async update(id: number, data: Partial<UserDto>): Promise<UserDto> {
+        return await this.prismaService.user.update({ where: { id }, data });
     }
 }
