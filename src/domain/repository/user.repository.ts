@@ -21,4 +21,8 @@ export class UserRepository {
     async create(data: UserDto): Promise<UserDto> {
         return await this.prismaService.user.create({ data });
     }
+
+    async delete(id: number) {
+        return await this.prismaService.user.delete({ where: { id } });
+    }
 }
