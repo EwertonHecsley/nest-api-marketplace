@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Response } from 'express';
 import { UserDto } from './dto/user.dto';
+import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 
 @Controller('user')
 export class UserController {
@@ -31,6 +32,7 @@ export class UserController {
         return response.status(HttpStatus.CREATED).json(user);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Put(':id')
     async update(@Param('id') id: string, @Body() dataUser: UserDto, @Res() response: Response) {
         const { password: _, ...user } = await this.userService.update(parseInt(id), dataUser);
@@ -38,6 +40,7 @@ export class UserController {
         return response.status(HttpStatus.OK).json({ mensagem: 'Usuário atualizado com sucesso.', user });
     }
 
+    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async destroy(@Param('id') id: string, @Res() response: Response) {
         await this.userService.delete(parseInt(id));
