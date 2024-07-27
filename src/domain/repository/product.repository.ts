@@ -10,4 +10,8 @@ export class ProdctRepository {
     async findAll(): Promise<ProductDto[]> {
         return await this.prismaService.product.findMany();
     }
+
+    async findById(id: number): Promise<ProductDto> {
+        return await this.prismaService.product.findUnique({ where: { id } });
+    }
 }
