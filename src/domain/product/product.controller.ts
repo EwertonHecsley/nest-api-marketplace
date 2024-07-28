@@ -9,8 +9,7 @@ export class ProductController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async handler(@Req() request: Request, @Res() response: Response) {
-        const user = request.user;
+    async handler(@Res() response: Response) {
         const products = await this.productService.findAll();
 
         return response.status(HttpStatus.OK).json(products);
